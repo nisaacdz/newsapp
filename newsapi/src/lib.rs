@@ -1,21 +1,20 @@
-pub mod obj {
-    use serde::Deserialize;
+use serde::Deserialize;
 
-    #[derive(Deserialize, Debug)]
-    pub struct Article {
-        pub title: String,
-        pub url: String,
-    }
+#[derive(Deserialize, Debug)]
+pub struct Article {
+    pub title: String,
+    pub url: String,
+}
 
-    #[derive(Deserialize, Debug)]
-    pub struct Articles {
-        pub articles: Vec<Article>,
-    }
+#[derive(Deserialize, Debug)]
+pub struct Articles {
+    pub articles: Vec<Article>,
 }
 
 pub mod surfer {
     use std::error::Error;
-    use crate::obj::Articles;
+
+    use crate::Articles;
 
     pub fn get_articles(url: &str) -> Result<Articles, Box<dyn Error>> {
         let res = ureq::get(url).call()?.into_string()?;
@@ -26,14 +25,14 @@ pub mod surfer {
     }
 }
 
-pub mod print_handler{
+pub mod print_handler {
+    use crate::Articles;
     use colour::{dark_green_ln, yellow_ln};
-    use crate::obj::Articles;
 
     pub fn render_articles(articles: &Articles) {
         for each_article in articles.articles.iter() {
             dark_green_ln!("> {}", each_article.title.as_str());
-            yellow_ln!(">> {}", each_article.url.as_str());
+            yellow_ln!(">> {}\n", each_article.url.as_str());
         }
     }
 

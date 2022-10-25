@@ -209,13 +209,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "newsapp"
+name = "newsapi"
 version = "0.1.0"
 dependencies = [
  "colour",
  "serde",
  "serde_json",
  "ureq",
+]
+
+[[package]]
+name = "newsapp"
+version = "0.1.0"
+dependencies = [
+ "newsapi",
 ]
 
 [[package]]
