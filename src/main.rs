@@ -16,8 +16,10 @@ fn main() -> Result<(), Box<dyn Error>>{
 
 pub fn render_articles(articles: &Articles) {
     let mytheme = theme::default();
-    for each_article in articles.articles.iter() {  
-        mytheme.print_text(&format!("{}", each_article.title.as_str()));
-        mytheme.print_text(&format!(">>{}\n\n", each_article.url.as_str()));
+    mytheme.print_text("# Top Headlines\n\n");
+    for each_article in articles.articles.iter() { 
+        mytheme.print_text("---"); 
+        mytheme.print_text(&format!("`{}`", each_article.title.as_str()));
+        mytheme.print_text(&format!(">*{}*", each_article.url.as_str()));
     }
 }
