@@ -1,9 +1,12 @@
 use std::error::Error;
 use newsapi::{surfer, print_handler};
+use dotenv::dotenv;
 
 fn main() -> Result<(), Box<dyn Error>>{
-    let url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=ce262f1d2c1a4288a8960760763fc0b1";
-    let articles = surfer::get_articles(url)?;
+    dotenv()?;
+    let api_key = std::env::var("API_KEY")?;
+    let url = format!("https://newsapi.org/v2/top-headlines?country=us&apiKey={}", api_key);
+    let articles = surfer::get_articles(&url)?;
 
     print_handler::render_articles(&articles);
     Ok(())
