@@ -54,7 +54,7 @@ impl ToString for Country {
     fn to_string(&self) -> String {
         match self {
             Country::Us => "us".to_string(),
-            Country::Ghana => "ghana".to_string(),
+            Country::Ghana => "china".to_string(),
         }
     }
 }

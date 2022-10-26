@@ -3,6 +3,7 @@ mod theme;
 use dotenv::dotenv;
 use newsapi::{NewsAPI, Article};
 use std::error::Error;
+use std::{thread, time};
 
 fn main() -> Result<(), Box<dyn Error>>{
     dotenv()?;
@@ -11,6 +12,8 @@ fn main() -> Result<(), Box<dyn Error>>{
     let result: &Vec<Article> = &NewsAPI::default(api_key).fetch()?.articles;
 
     render_articles(result);
+
+    thread::sleep(time::Duration::from_secs(2000));
     Ok(())
 }
 
