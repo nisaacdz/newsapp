@@ -1,3 +1,5 @@
+#[cfg(feature = "async")]
+use reqwest;
 use serde::Deserialize;
 use url::Url;
 
@@ -15,6 +17,8 @@ pub enum NewsApiError {
     NewsApiUrlParsingFailed(#[from] url::ParseError),
     #[error("Request failed {0}")]
     NewsApiBadRequestError(&'static str),
+    #[error("Async fetching failed")]
+    NewsApiAsyncRequestFailed(#[from] reqwest::Error),
 }
 
 #[derive(Deserialize, Debug)]
@@ -111,6 +115,21 @@ impl NewsAPI {
 
         let res: NewsApiResponse = req.call()?.into_json()?;
 
+        match res.status.as_str() {
+            "ok" => return Ok(res),
+            _=> return Err(map_request_error(res.code)),
+        };
+    }
+
+    pub async fn fetch_async(&self) -> Result<NewsApiResponse, NewsApiError>{
+        let url = self.get_url();
+        let client = reqwest::Client::new();
+        let req = client.request(Method::GET, url)
+        .header("Authorization", self.api_key).build()
+        .map_err(|e| NewsApiError::NewsApiAsyncRequestFailed(e))?;
+        
+        let response: NewsApiResponse = client.execute(req).await?
+        .json().await.map_err(|e| NewsApiError::NewsApiAsyncRequestFailed(e))?;
         match res.status.as_str() {
             "ok" => return Ok(res),
             _=> return Err(map_request_error(res.code)),
